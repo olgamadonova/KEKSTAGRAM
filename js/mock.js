@@ -1,9 +1,7 @@
 import { getRandomArrayElement, getRandomPositiveInteger } from './utils.js';
-
+//перечисление всех заданных количественных характеристик фотографии объединено в объект-перечисление
 const PhotoItem = {
   QUANTITY: 25,
-  ID_QUANTITY: 25,
-  URL_QUANTITY: 25,
   LIKES_MIN_QUANTITY: 15,
   LIKES_MAX_QUANTITY: 200,
   COMMENTS_MIN_QUANTITY:0,
@@ -13,8 +11,9 @@ const PhotoItem = {
   }
 };
 
-const { QUANTITY, ID_QUANTITY, URL_QUANTITY, LIKES_MAX_QUANTITY, LIKES_MIN_QUANTITY, COMMENTS_MIN_QUANTITY, COMMENTS_MAX_QUANTITY, COMMENTS: { AVATAR_QUANTITY } } = PhotoItem;
+const { QUANTITY, LIKES_MAX_QUANTITY, LIKES_MIN_QUANTITY, COMMENTS_MIN_QUANTITY, COMMENTS_MAX_QUANTITY, COMMENTS: { AVATAR_QUANTITY } } = PhotoItem;
 
+//статические моки
 const photoItemDescriptions = [
   'один',
   'два',
@@ -28,10 +27,6 @@ const photoItemDescriptions = [
   'десять',
 ];
 
-const photoItemsIds = () => Array.from({length: ID_QUANTITY}, (_, index) => index + 1);
-const photoItemsUrls = () => Array.from({length: URL_QUANTITY}, (_, index) => `photos/${index + 1}.jpg`);
-
-const commentItemAvatars = () => Array.from({length: AVATAR_QUANTITY}, (_, index) => `img/avatar-${index + 1}.svg`);
 const commentItemMessages = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -50,7 +45,22 @@ const commentItemAuthors = [
   'Кирилл',
   'Елена',
 ];
+const commentItemAvatars = () => Array.from({length: AVATAR_QUANTITY}, (_, index) => `img/avatar-${index + 1}.svg`);
 
+//функции возвращают неповторящиеся id фото и url с адресом картинки
+const getPhotoItemsIds = () => {
+  let index = 1;
+  return () => index++;
+};
+const photoId = getPhotoItemsIds();
+
+const getPhotoItemsUrls = () => {
+  let index = 1;
+  return () => `photos/${index++}.jpg`;
+};
+const photoUrl = getPhotoItemsUrls();
+
+//функция возвращает объект одного комментария
 const getCommentItem = () => ({
   id: + new Date(),
   avatar: getRandomArrayElement(commentItemAvatars()),
@@ -58,30 +68,18 @@ const getCommentItem = () => ({
   name: getRandomArrayElement(commentItemAuthors),
 });
 
+//функция возращает список комментариев случайной длины в обозначенном в тз диапазоне
 const getCommentList = () => Array.from({length: getRandomPositiveInteger(COMMENTS_MIN_QUANTITY, COMMENTS_MAX_QUANTITY)}, getCommentItem);
 
+//функция возвращает объект одной фотокарточки
 const getPhotoItem = () => ({
-  id: 'id',
-  url: 'url',
+  id: photoId(),
+  url: photoUrl(),
   description: getRandomArrayElement(photoItemDescriptions),
   likes: getRandomPositiveInteger(LIKES_MIN_QUANTITY, LIKES_MAX_QUANTITY),
   comments: getCommentList(),
 });
 
+//функция возвращает список фотокарточек заданной в тз длины
 const getPhotoList = () => Array.from({length: QUANTITY}, getPhotoItem);
-console.table(getPhotoList());
-
-const getRandomUniqueElement = (elements) => {
-  const previousElements = [];
-
-  let newRandomElement = getRandomArrayElement(elements);
-
-  if (previousElements.length >= elements.length) {
-    return;
-  }
-  while (previousElements.includes(newRandomElement)) {
-    newRandomElement = getRandomArrayElement(elements);
-  } previousElements.push(newRandomElement);
-
-  return newRandomElement;
-};
+getPhotoList();
