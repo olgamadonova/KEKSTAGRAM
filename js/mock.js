@@ -1,6 +1,8 @@
 import { getRandomArrayElement, getRandomPositiveInteger } from './utils.js';
 //перечисление всех заданных количественных характеристик фотографии объединено в объект-перечисление
 const PhotoItem = {
+  FIRST_POST_ID: 1,
+  FIRST_POST_URL: 1,
   QUANTITY: 25,
   LIKES_MIN_QUANTITY: 15,
   LIKES_MAX_QUANTITY: 200,
@@ -8,10 +10,12 @@ const PhotoItem = {
   COMMENTS_MAX_QUANTITY: 30,
   COMMENTS: {
     AVATAR_QUANTITY: 6,
+    FIRST_COMMENT_ID: 1,
   }
 };
 
 const { QUANTITY, LIKES_MAX_QUANTITY, LIKES_MIN_QUANTITY, COMMENTS_MIN_QUANTITY, COMMENTS_MAX_QUANTITY, COMMENTS: { AVATAR_QUANTITY } } = PhotoItem;
+let { FIRST_POST_ID, FIRST_POST_URL, COMMENTS: { FIRST_COMMENT_ID } } = PhotoItem;
 
 //статические моки
 const photoItemDescriptions = [
@@ -47,22 +51,9 @@ const commentItemAuthors = [
 ];
 const commentItemAvatars = () => Array.from({length: AVATAR_QUANTITY}, (_, index) => `img/avatar-${index + 1}.svg`);
 
-//функции возвращают неповторящиеся id фото и url с адресом картинки
-const getPhotoItemsIds = () => {
-  let index = 1;
-  return () => index++;
-};
-const photoId = getPhotoItemsIds();
-
-const getPhotoItemsUrls = () => {
-  let index = 1;
-  return () => `photos/${index++}.jpg`;
-};
-const photoUrl = getPhotoItemsUrls();
-
 //функция возвращает объект одного комментария
 const getCommentItem = () => ({
-  id: + new Date(),
+  id: FIRST_COMMENT_ID++,
   avatar: getRandomArrayElement(commentItemAvatars()),
   message: getRandomArrayElement(commentItemMessages),
   name: getRandomArrayElement(commentItemAuthors),
@@ -73,8 +64,8 @@ const getCommentList = () => Array.from({length: getRandomPositiveInteger(COMMEN
 
 //функция возвращает объект одной фотокарточки
 const getPhotoItem = () => ({
-  id: photoId(),
-  url: photoUrl(),
+  id: FIRST_POST_ID++,
+  url: `photos/${FIRST_POST_URL++}.jpg`,
   description: getRandomArrayElement(photoItemDescriptions),
   likes: getRandomPositiveInteger(LIKES_MIN_QUANTITY, LIKES_MAX_QUANTITY),
   comments: getCommentList(),
@@ -82,4 +73,5 @@ const getPhotoItem = () => ({
 
 //функция возвращает список фотокарточек заданной в тз длины
 const getPhotoList = () => Array.from({length: QUANTITY}, getPhotoItem);
+
 getPhotoList();
