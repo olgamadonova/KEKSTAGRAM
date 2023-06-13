@@ -5,7 +5,7 @@ const normalizeTime = (time) => time.split(':').map((timeElement) => timeElement
 const validateInput = (...strings) => strings.every((str) => typeof str === 'string');
 
 const isOverTime = (startWorkingDay, endWorkingDay, startMeeting, meetingDuration) => {
-  if(! validateInput(startWorkingDay, endWorkingDay, startMeeting)){
+  if(!validateInput(startWorkingDay, endWorkingDay, startMeeting)){
     return null;
   }
 
@@ -13,7 +13,7 @@ const isOverTime = (startWorkingDay, endWorkingDay, startMeeting, meetingDuratio
   const [hoursEndWorking, minutesEndWorking] = normalizeTime(endWorkingDay);
   const [hoursStartMeeting, minutesStartMeeting] = normalizeTime(startMeeting);
 
-  if (+hoursStartWorking > +hoursStartMeeting || +hoursStartMeeting > +hoursEndWorking) {
+  if (parseInt(hoursStartWorking, 10) > parseInt(hoursStartMeeting, 10) || parseInt(hoursStartMeeting, 10) > parseInt(hoursEndWorking, 10)) {
     return false;
   }
 
