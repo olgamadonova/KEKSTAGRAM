@@ -1,2 +1,2 @@
 import './utils.js';
-import './mock.js';
+import './render.js';
