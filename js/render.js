@@ -1,13 +1,10 @@
 import { getPhotoList } from './mock.js';
 
 const picturesContainerElement = document.querySelector('.pictures');
+const picturesListFragment = document.createDocumentFragment();
+const pictureTemplate = document.querySelector('#picture')?.content;
 
-
-const renderPicturesList = () => {
-  const picturesList = getPhotoList();
-  const picturesListFragment = document.createDocumentFragment();
-  const pictureTemplate = document.querySelector('#picture')?.content;
-
+const renderPicturesList = (picturesList) => {
   picturesList.forEach(({ url, id, comments, likes, description }) => {
     if (pictureTemplate) {
       const pictureElement = pictureTemplate.cloneNode(true);
@@ -20,8 +17,7 @@ const renderPicturesList = () => {
       picturesListFragment.appendChild(pictureElement); //в скринкастах сказали, что лучше использовать вместо appendChild append, но как я понимаю фишка append в том, что можно передать несколько элементов, а appendChild явно показывает то, что мы добавляем один элемент, он ведь тут уместнее? (appendChild)
     }
   });
-
   picturesContainerElement.appendChild(picturesListFragment);
 };
 
-renderPicturesList();
+renderPicturesList(getPhotoList());
