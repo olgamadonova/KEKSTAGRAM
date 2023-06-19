@@ -18,6 +18,7 @@ const onPicturePopupElementKeydown = (evt) => {
   }
 };
 
+//линтер выдает ошибку в функции onPicturePopupElementKeydown если объявить onPicturePopupCloseBtnElementClick в стрелочном синтаксисе, так как она была использована до объявление, function declaration так использовать можно, но код получается неконсистентным, как тут быть?
 function onPicturePopupCloseBtnElementClick () {
   closePopup(picturePopupElement);
   setScrollBody();
@@ -46,26 +47,26 @@ const onPicturesListClick = (evt) => {
   picturePopupElement.querySelector('.big-picture__img img').src = url;
   picturePopupElement.querySelector('.big-picture__social .social__caption').textContent = description;
   picturePopupElement.querySelector('.big-picture__social .social__likes .likes-count').textContent = likes;
+  picturePopupElement.querySelector('.social__comments').innerHTML = '';
 
-  //commentsRendered += COMMENT_STEP;
+  //не могу понять как сделать дополнительную подгрузку фотографий
+  comments.forEach(({ avatar, message, name }) => {
 
-  if (comments.length <= COMMENT_STEP) {
-    commentsRendered = comments.length;
-    commentsLoader.classList.add('hidden');
-  } else {
-    commentsRendered = COMMENT_STEP;
-    commentsLoader.classList.remove('hidden');
-  } picturePopupElement.querySelector('.social__comments').innerHTML = '';
-  currentPictureItem.comments.forEach(({ avatar, message, name }) => {
-    const comment = createComment(avatar, message, name);
-    picturePopupElement.querySelector('.social__comments').insertAdjacentHTML('beforeend', comment);
+    if (comments.length <= COMMENT_STEP) {
+      commentsRendered = comments.length;
+      commentsLoader.classList.add('hidden');
+      const comment = createComment(avatar, message, name);
+      picturePopupElement.querySelector('.social__comments').insertAdjacentHTML('beforeend', comment);
+      return;
+    }
+    if (comments.length > COMMENT_STEP) {
+      commentsRendered = COMMENT_STEP;
+      commentsLoader.classList.remove('hidden');
+    }
+    picturePopupElement.querySelector('.social__comments').insertAdjacentHTML('beforeend', createComment(avatar, message, name));
+
   });
-
-  /*for (let i = 0; i < commentsRendered; i++) {
-    const comment = createComment(comments[i].avatar, comments[i].message, comments[i].name);
-    picturePopupElement.querySelector('.social__comments').insertAdjacentHTML('beforeend', comment);
-  }*/
-  commentsCountElement.innerHTML = `${commentsRendered} из <span class="comments-count">${currentPictureItem.comments.length}</span> комментариев`;
+  commentsCountElement.innerHTML = `${commentsRendered} из <span class="comments-count">${comments.length}</span> комментариев`;
 };
 
 export { onPicturesListClick };
