@@ -74,4 +74,4 @@ const getPhotoItem = () => ({
 //функция возвращает список фотокарточек заданной в тз длины
 const getPhotoList = () => Array.from({length: QUANTITY}, getPhotoItem);
 
-getPhotoList();
+export { getPhotoList };
