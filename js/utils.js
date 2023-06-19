@@ -1,19 +1,11 @@
+const bodyElement = document.querySelector('body');
+
 const isValidLength = (string, lengthValue) => string.length <= lengthValue;
 
 isValidLength('instagram', 10);
 
-const isPalindrome = (string) => {
-  if (typeof string !== 'string') {
-    return;
-  }
-  const normalizedString = string.toLowerCase().replaceAll(' ', '');
-  return [...normalizedString].reverse().join('') === normalizedString;
-};
-
-isPalindrome('Лёша на полке клопа нашёл ');
-
-const getNumbers = (string) => parseInt(string.replace(/\D+/g, ''), 10);
-getNumbers('1 кефир, 0.5 батона');
+/*const getNumbers = (string) => parseInt(string.replace(/\D+/g, ''), 10);
+getNumbers('1 кефир, 0.5 батона');*/
 
 const getRandomArrayElement = (elements) => elements[Math.floor(Math.random() * elements.length)];
 
@@ -26,4 +18,18 @@ const getRandomPositiveInteger = (min, max) => {
   return Math.floor(result);
 };
 
-export { getRandomArrayElement, getRandomPositiveInteger };
+const isEscPressed = (evt) => evt.key === 'Escape';
+
+const renderPopup = (popup) => popup.classList.remove('hidden');
+
+const closePopup = (popup) => popup.classList.add('hidden');
+
+const elementRemoveListener = (element, evtType, listener) => element.removeEventListener(evtType, listener);
+
+const elementAddListener = (element, evtType, listener) => element.addEventListener(evtType, listener);
+
+const setNoScrollBody = () => bodyElement.classList.add('modal-open');
+
+const setScrollBody = () => bodyElement.classList.remove('modal-open');
+
+export { getRandomArrayElement, getRandomPositiveInteger, isEscPressed, renderPopup, elementAddListener, elementRemoveListener, closePopup, setNoScrollBody, setScrollBody };
