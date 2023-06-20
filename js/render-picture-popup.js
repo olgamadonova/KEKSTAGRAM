@@ -3,28 +3,47 @@ import { picturesList } from './render-thumbnails.js';
 import { createComment } from './create-dom-elements.js';
 
 const picturePopupElement = document.querySelector('.big-picture');
+const picturePopupCommentsElement = picturePopupElement.querySelector('.social__comments');
 const picturePopupCloseBtnElement = picturePopupElement.querySelector('.big-picture__cancel');
 const commentsCountElement = picturePopupElement.querySelector('.social__comment-count');
 const commentsLoader = picturePopupElement.querySelector('.comments-loader');
+
 const COMMENT_STEP = 5;
 let commentsRendered = 0;
 
-const onPicturePopupElementKeydown = (evt) => {
-  if (isEscPressed(evt)) {
-    closePopup(picturePopupElement);
-    setScrollBody();
-    elementRemoveListener(picturePopupCloseBtnElement, 'click',onPicturePopupCloseBtnElementClick);
-    elementRemoveListener(document, 'keydown', onPicturePopupElementKeydown);
-  }
-};
-
-//линтер выдает ошибку в функции onPicturePopupElementKeydown если объявить onPicturePopupCloseBtnElementClick в стрелочном синтаксисе, так как она была использована до объявление, function declaration так использовать можно, но код получается неконсистентным, как тут быть?
-function onPicturePopupCloseBtnElementClick () {
+//тут все равно ниже пришлось использовать function declaration так как функции-обработчики частично отличаются
+const onPicturePopupElementKeydown = (evt) => isEscPressed(evt) && setClosePopupConfigs();
+const onPicturePopupCloseBtnElementClick = () => setClosePopupConfigs();
+function setClosePopupConfigs () {
   closePopup(picturePopupElement);
   setScrollBody();
   elementRemoveListener(picturePopupCloseBtnElement, 'click',onPicturePopupCloseBtnElementClick);
   elementRemoveListener(document, 'keydown', onPicturePopupElementKeydown);
 }
+
+//логика отрисовки комментариев и загрузчика
+const renderComments = (commentsList) => {
+  picturePopupCommentsElement.innerHTML = '';
+  if (commentsList.length <= commentsRendered) {
+    commentsRendered = commentsList.length;
+    commentsLoader.classList.add('hidden');
+  } else {
+    commentsLoader.classList.remove('hidden');
+  }
+  for (let i = 0; i < commentsRendered; i++) {
+    const commentItem = createComment(commentsList[i].avatar, commentsList[i].message, commentsList[i].name);
+    picturePopupCommentsElement.insertAdjacentHTML('beforeend', commentItem);
+
+  }
+  commentsCountElement.innerHTML = `${commentsRendered} из <span class="comments-count">${commentsList.length}</span> комментариев`;
+};
+
+//при клике на кнопку увеличиваем счетчик на 5 и заново все отрисовываем, замыкание, чтобы можно было передать аргумент в колбэк
+const onCommentsLoaderClick = (commentsList) => () => {
+  commentsRendered += COMMENT_STEP;
+  renderComments(commentsList);
+};
+
 
 const onPicturesListClick = (evt) => {
   const target = evt.target.closest('.picture');
@@ -47,26 +66,17 @@ const onPicturesListClick = (evt) => {
   picturePopupElement.querySelector('.big-picture__img img').src = url;
   picturePopupElement.querySelector('.big-picture__social .social__caption').textContent = description;
   picturePopupElement.querySelector('.big-picture__social .social__likes .likes-count').textContent = likes;
-  picturePopupElement.querySelector('.social__comments').innerHTML = '';
 
-  //не могу понять как сделать дополнительную подгрузку фотографий
-  comments.forEach(({ avatar, message, name }) => {
+  //блок отвечающий за отрисовку и подгрузку комментариев
+  commentsRendered = COMMENT_STEP;
+  renderComments(comments);
 
-    if (comments.length <= COMMENT_STEP) {
-      commentsRendered = comments.length;
-      commentsLoader.classList.add('hidden');
-      const comment = createComment(avatar, message, name);
-      picturePopupElement.querySelector('.social__comments').insertAdjacentHTML('beforeend', comment);
-      return;
-    }
-    if (comments.length > COMMENT_STEP) {
-      commentsRendered = COMMENT_STEP;
-      commentsLoader.classList.remove('hidden');
-    }
-    picturePopupElement.querySelector('.social__comments').insertAdjacentHTML('beforeend', createComment(avatar, message, name));
-
-  });
-  commentsCountElement.innerHTML = `${commentsRendered} из <span class="comments-count">${comments.length}</span> комментариев`;
+  //обработчики не удаляются при изменении класса
+  if (commentsLoader.classList.contains('hidden')) {
+    commentsLoader.removeEventListener('click', onCommentsLoaderClick(comments));
+  } else {
+    commentsLoader.addEventListener('click', onCommentsLoaderClick(comments));
+  }
 };
 
 export { onPicturesListClick };
