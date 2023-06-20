@@ -10,6 +10,7 @@ const commentsLoader = picturePopupElement.querySelector('.comments-loader');
 
 const COMMENT_STEP = 5;
 let commentsRendered = 0;
+let onLoaderClick;
 
 //тут все равно ниже пришлось использовать function declaration так как функции-обработчики частично отличаются
 const onPicturePopupElementKeydown = (evt) => isEscPressed(evt) && setClosePopupConfigs();
@@ -19,6 +20,7 @@ function setClosePopupConfigs () {
   setScrollBody();
   elementRemoveListener(picturePopupCloseBtnElement, 'click',onPicturePopupCloseBtnElementClick);
   elementRemoveListener(document, 'keydown', onPicturePopupElementKeydown);
+  elementRemoveListener(commentsLoader, 'click', onLoaderClick);
 }
 
 //логика отрисовки комментариев и загрузчика
@@ -38,12 +40,11 @@ const renderComments = (commentsList) => {
   commentsCountElement.innerHTML = `${commentsRendered} из <span class="comments-count">${commentsList.length}</span> комментариев`;
 };
 
-//при клике на кнопку увеличиваем счетчик на 5 и заново все отрисовываем, замыкание, чтобы можно было передать аргумент в колбэк
+//при клике на кнопку увеличиваем счетчик на 5 и заново все отрисовываем
 const onCommentsLoaderClick = (commentsList) => {
   commentsRendered += COMMENT_STEP;
   renderComments(commentsList);
 };
-
 
 const onPicturesListClick = (evt) => {
   const target = evt.target.closest('.picture');
@@ -72,11 +73,9 @@ const onPicturesListClick = (evt) => {
   renderComments(comments);
 
   //обработчик не удаляется
-  const onLoaderClick = () => onCommentsLoaderClick(comments);
+  onLoaderClick = () => onCommentsLoaderClick(comments);
   if (!commentsLoader.classList.contains('hidden')) {
     elementAddListener(commentsLoader, 'click', onLoaderClick);
-  } else {
-    elementRemoveListener(commentsLoader, 'click', onLoaderClick);
   }
 };
 
