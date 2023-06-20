@@ -39,7 +39,7 @@ const renderComments = (commentsList) => {
 };
 
 //при клике на кнопку увеличиваем счетчик на 5 и заново все отрисовываем, замыкание, чтобы можно было передать аргумент в колбэк
-const onCommentsLoaderClick = (commentsList) => () => {
+const onCommentsLoaderClick = (commentsList) => {
   commentsRendered += COMMENT_STEP;
   renderComments(commentsList);
 };
@@ -71,11 +71,12 @@ const onPicturesListClick = (evt) => {
   commentsRendered = COMMENT_STEP;
   renderComments(comments);
 
-  //обработчики не удаляются при изменении класса
-  if (commentsLoader.classList.contains('hidden')) {
-    commentsLoader.removeEventListener('click', onCommentsLoaderClick(comments));
+  //обработчик не удаляется
+  const onLoaderClick = () => onCommentsLoaderClick(comments);
+  if (!commentsLoader.classList.contains('hidden')) {
+    elementAddListener(commentsLoader, 'click', onLoaderClick);
   } else {
-    commentsLoader.addEventListener('click', onCommentsLoaderClick(comments));
+    elementRemoveListener(commentsLoader, 'click', onLoaderClick);
   }
 };
 
