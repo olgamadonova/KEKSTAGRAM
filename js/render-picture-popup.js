@@ -1,5 +1,4 @@
-import { isEscPressed, renderPopup, elementAddListener, elementRemoveListener, closePopup, setNoScrollBody, setScrollBody } from './utils.js';
-import { picturesList } from './render-thumbnails.js';
+import { isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody } from './utils.js';
 import { createComment } from './create-dom-elements.js';
 
 const picturePopupElement = document.querySelector('.big-picture');
@@ -10,73 +9,80 @@ const commentsLoader = picturePopupElement.querySelector('.comments-loader');
 
 const COMMENT_STEP = 5;
 let commentsRendered = 0;
+let currentComments = [];
 let onLoaderClick;
 
-//тут все равно ниже пришлось использовать function declaration так как функции-обработчики частично отличаются
-const onPicturePopupElementKeydown = (evt) => isEscPressed(evt) && setClosePopupConfigs();
-const onPicturePopupCloseBtnElementClick = () => setClosePopupConfigs();
-function setClosePopupConfigs () {
-  closePopup(picturePopupElement);
-  setScrollBody();
-  elementRemoveListener(picturePopupCloseBtnElement, 'click',onPicturePopupCloseBtnElementClick);
-  elementRemoveListener(document, 'keydown', onPicturePopupElementKeydown);
-  elementRemoveListener(commentsLoader, 'click', onLoaderClick);
-}
+//логика отрисовки кнопки для загрузки доп порции комментариев
+const checkMoreButton = (cb, totalCommentsList, currentCommentsList = '') => {
+  if (totalCommentsList.length > COMMENT_STEP) {
+    commentsLoader.classList.remove('hidden');
+    commentsLoader.addEventListener('click', cb);
+  } if (totalCommentsList.length === currentCommentsList.length || totalCommentsList.length <= COMMENT_STEP) {
+    commentsLoader.classList.add('hidden');
+    commentsLoader.removeEventListener('click', cb);
+  }
+};
 
-//логика отрисовки комментариев и загрузчика
-const renderComments = (commentsList) => {
+//логика отрисовки комментариев
+const renderComments = (currentCommentsList, totalCommentsList) => {
   picturePopupCommentsElement.innerHTML = '';
-  if (commentsList.length <= commentsRendered) {
-    commentsRendered = commentsList.length;
+
+  if (currentCommentsList.length <= commentsRendered) {
+    commentsRendered = currentCommentsList.length;
     commentsLoader.classList.add('hidden');
   } else {
     commentsLoader.classList.remove('hidden');
   }
+
   for (let i = 0; i < commentsRendered; i++) {
-    const commentItem = createComment(commentsList[i].avatar, commentsList[i].message, commentsList[i].name);
-    picturePopupCommentsElement.insertAdjacentHTML('beforeend', commentItem);
+    const commentItem = createComment(currentCommentsList[i].avatar, currentCommentsList[i].message, currentCommentsList[i].name);
+    picturePopupCommentsElement.appendChild(commentItem);
 
   }
-  commentsCountElement.innerHTML = `${commentsRendered} из <span class="comments-count">${commentsList.length}</span> комментариев`;
+  totalCommentsList = totalCommentsList > currentCommentsList ? totalCommentsList : currentCommentsList;
+
+  commentsCountElement.innerHTML = `${commentsRendered} из <span class="comments-count">${totalCommentsList.length}</span> комментариев`;
 };
 
-//при клике на кнопку увеличиваем счетчик на 5 и заново все отрисовываем
-const onCommentsLoaderClick = (commentsList) => {
-  commentsRendered += COMMENT_STEP;
-  renderComments(commentsList);
-};
+const onPicturePopupEscKeydown = (evt) => isEscPressed(evt) && closeBigPicture();
 
-const onPicturesListClick = (evt) => {
-  const target = evt.target.closest('.picture');
-  if (!target) {
-    return;
-  } const targetId = target.getAttribute('id');
+function closeBigPicture () {
+  closePopup(picturePopupElement);
+  setScrollBody();
+  document.removeEventListener('keydown', onPicturePopupEscKeydown);
+  commentsLoader.removeEventListener('click', onLoaderClick);
+}
 
-  const currentPictureItem = picturesList.find((picture) => picture.id === parseInt(targetId, 10));
+const showBigPicture = (picture) => {
+  const { url, description, likes, comments } = picture;
 
-  const { url, description, likes, comments} = currentPictureItem;
-
-  renderPopup(picturePopupElement);
-  setNoScrollBody();
-
-  if (!picturePopupElement.classList.contains('hidden')) {
-    elementAddListener(picturePopupCloseBtnElement, 'click',onPicturePopupCloseBtnElementClick);
-    elementAddListener(document, 'keydown', onPicturePopupElementKeydown);
-  }
+  commentsRendered = comments.length < COMMENT_STEP ? comments.length : COMMENT_STEP;
+  currentComments = comments.slice(0, commentsRendered);
 
   picturePopupElement.querySelector('.big-picture__img img').src = url;
   picturePopupElement.querySelector('.big-picture__social .social__caption').textContent = description;
   picturePopupElement.querySelector('.big-picture__social .social__likes .likes-count').textContent = likes;
 
-  //блок отвечающий за отрисовку и подгрузку комментариев
-  commentsRendered = COMMENT_STEP;
-  renderComments(comments);
+  onLoaderClick = () => {
+    commentsRendered += comments.length < (commentsRendered + COMMENT_STEP) ? comments.length : COMMENT_STEP;
 
-  //обработчик не удаляется
-  onLoaderClick = () => onCommentsLoaderClick(comments);
-  if (!commentsLoader.classList.contains('hidden')) {
-    elementAddListener(commentsLoader, 'click', onLoaderClick);
-  }
+    currentComments = comments.slice(0, commentsRendered);
+
+    renderComments(currentComments, comments);
+
+    checkMoreButton(onLoaderClick, comments, currentComments);
+  };
+
+  renderComments(currentComments, comments);
+
+  checkMoreButton(onLoaderClick, comments);
+
+  openPopup(picturePopupElement);
+
+  setNoScrollBody();
+
+  document.addEventListener('keydown', onPicturePopupEscKeydown);
+  picturePopupCloseBtnElement.addEventListener('click', closeBigPicture);
 };
 
-export { onPicturesListClick };
+export { showBigPicture };

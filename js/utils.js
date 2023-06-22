@@ -20,16 +20,12 @@ const getRandomPositiveInteger = (min, max) => {
 
 const isEscPressed = (evt) => evt.key === 'Escape';
 
-const renderPopup = (popup) => popup.classList.remove('hidden');
+const openPopup = (popup) => popup.classList.remove('hidden');
 
 const closePopup = (popup) => popup.classList.add('hidden');
-
-const elementRemoveListener = (element, evtType, listener) => element.removeEventListener(evtType, listener);
-
-const elementAddListener = (element, evtType, listener) => element.addEventListener(evtType, listener);
 
 const setNoScrollBody = () => bodyElement.classList.add('modal-open');
 
 const setScrollBody = () => bodyElement.classList.remove('modal-open');
 
-export { getRandomArrayElement, getRandomPositiveInteger, isEscPressed, renderPopup, elementAddListener, elementRemoveListener, closePopup, setNoScrollBody, setScrollBody };
+export { getRandomArrayElement, getRandomPositiveInteger, isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody };
