@@ -30,12 +30,11 @@ const renderComments = (currentCommentsList, totalCommentsList) => {
   if (currentCommentsList.length <= commentsRendered) {
     commentsRendered = currentCommentsList.length;
   }
-
-  for (let i = 0; i < commentsRendered; i++) {
-    const commentItem = createComment(currentCommentsList[i].avatar, currentCommentsList[i].message, currentCommentsList[i].name);
+  currentCommentsList.forEach(({ avatar, message, name }) => {
+    const commentItem = createComment(avatar, message, name);
     picturePopupCommentsElement.appendChild(commentItem);
+  });
 
-  }
   totalCommentsList = totalCommentsList > currentCommentsList ? totalCommentsList : currentCommentsList;
 
   commentsCountElement.innerHTML = `${commentsRendered} из <span class="comments-count">${totalCommentsList.length}</span> комментариев`;
