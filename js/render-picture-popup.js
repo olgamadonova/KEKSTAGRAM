@@ -29,9 +29,6 @@ const renderComments = (currentCommentsList, totalCommentsList) => {
 
   if (currentCommentsList.length <= commentsRendered) {
     commentsRendered = currentCommentsList.length;
-    commentsLoader.classList.add('hidden');
-  } else {
-    commentsLoader.classList.remove('hidden');
   }
 
   for (let i = 0; i < commentsRendered; i++) {
@@ -48,7 +45,9 @@ const onPicturePopupEscKeydown = (evt) => isEscPressed(evt) && closeBigPicture()
 
 function closeBigPicture () {
   closePopup(picturePopupElement);
+
   setScrollBody();
+
   document.removeEventListener('keydown', onPicturePopupEscKeydown);
   commentsLoader.removeEventListener('click', onLoaderClick);
 }
@@ -56,12 +55,12 @@ function closeBigPicture () {
 const showBigPicture = (picture) => {
   const { url, description, likes, comments } = picture;
 
-  commentsRendered = comments.length < COMMENT_STEP ? comments.length : COMMENT_STEP;
-  currentComments = comments.slice(0, commentsRendered);
-
   picturePopupElement.querySelector('.big-picture__img img').src = url;
   picturePopupElement.querySelector('.big-picture__social .social__caption').textContent = description;
   picturePopupElement.querySelector('.big-picture__social .social__likes .likes-count').textContent = likes;
+
+  commentsRendered = comments.length < COMMENT_STEP ? comments.length : COMMENT_STEP;
+  currentComments = comments.slice(0, commentsRendered);
 
   onLoaderClick = () => {
     commentsRendered += comments.length < (commentsRendered + COMMENT_STEP) ? comments.length : COMMENT_STEP;
