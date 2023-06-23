@@ -37,7 +37,7 @@ const renderComments = (currentCommentsList, totalCommentsList) => {
 
   totalCommentsList = totalCommentsList > currentCommentsList ? totalCommentsList : currentCommentsList;
 
-  commentsCountElement.innerHTML = `${commentsRendered} из <span class="comments-count">${totalCommentsList.length}</span> комментариев`;
+  commentsCountElement.textContent = `${commentsRendered} из ${totalCommentsList.length} комментариев`;
 };
 
 const onPicturePopupEscKeydown = (evt) => isEscPressed(evt) && closeBigPicture();
