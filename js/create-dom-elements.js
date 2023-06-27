@@ -24,4 +24,4 @@ const createComment = (avatar, message, name) => {
   return listItem;
 };
 
-export { createComment };
+export { createComment, createDomElement };

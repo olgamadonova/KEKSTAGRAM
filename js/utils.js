@@ -1,9 +1,5 @@
 const bodyElement = document.querySelector('body');
 
-const isValidLength = (string, lengthValue) => string.length <= lengthValue;
-
-isValidLength('instagram', 10);
-
 /*const getNumbers = (string) => parseInt(string.replace(/\D+/g, ''), 10);
 getNumbers('1 кефир, 0.5 батона');*/
 
@@ -28,4 +24,6 @@ const setNoScrollBody = () => bodyElement.classList.add('modal-open');
 
 const setScrollBody = () => bodyElement.classList.remove('modal-open');
 
-export { getRandomArrayElement, getRandomPositiveInteger, isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody };
+const normalizeString = (str) => str.toLowerCase().trim();
+
+export { getRandomArrayElement, getRandomPositiveInteger, isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody, normalizeString };

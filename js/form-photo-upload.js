@@ -1,9 +1,9 @@
 import { isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody } from './utils.js';
+import { onFormSubmit, validateFormInputs } from './form-validate.js';
 
 const formElement = document.querySelector('.img-upload__form');
 const uploadInputElement = formElement.querySelector('.img-upload__input');
 const uploadPopupElement = formElement.querySelector('.img-upload__overlay');
-const submitUploadElement = formElement.querySelector('.img-upload__submit');
 const closePopupBtnElement = formElement.querySelector('.img-upload__cancel');
 
 const onUploadPopupEscKeydown = (evt) => isEscPressed(evt)
@@ -15,26 +15,29 @@ const resetUploadForm = () => {
   formElement.reset();
 };
 
-const blockEscKeydown = (evt) => isEscPressed(evt) && (!evt.target.classList.contains('text__hashtags') || !evt.target.classList.contains('text__description'));
-
 function closeUploadPopup () {
   closePopup(uploadPopupElement);
   setScrollBody();
   document.removeEventListener('keydown', onUploadPopupEscKeydown);
   resetUploadForm();
+  formElement.removeEventListener('submit', onFormSubmit);
 }
 
-
 const openUploadPopup = () => {
+  validateFormInputs();
   setNoScrollBody();
   openPopup(uploadPopupElement);
   document.addEventListener('keydown', onUploadPopupEscKeydown);
   closePopupBtnElement.addEventListener('click', closeUploadPopup);
 };
 
+
 const onUploadInputChange = () => {
   openUploadPopup();
+  formElement.addEventListener('submit', onFormSubmit);
 };
 
 uploadInputElement.addEventListener('change', onUploadInputChange);
+
+export { closeUploadPopup };
 
