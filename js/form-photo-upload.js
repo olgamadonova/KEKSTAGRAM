@@ -1,5 +1,5 @@
 import { isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody } from './utils.js';
-import { onFormSubmit, validateFormInputs } from './form-validate.js';
+import { onFormSubmit } from './form-validate.js';
 
 const formElement = document.querySelector('.img-upload__form');
 const uploadInputElement = formElement.querySelector('.img-upload__input');
@@ -24,7 +24,6 @@ function closeUploadPopup () {
 }
 
 const openUploadPopup = () => {
-  validateFormInputs();
   setNoScrollBody();
   openPopup(uploadPopupElement);
   document.addEventListener('keydown', onUploadPopupEscKeydown);
