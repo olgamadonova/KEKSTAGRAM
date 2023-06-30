@@ -99,7 +99,7 @@ const pristine = new Pristine (formElement, {
   errorTextClass: 'form__error',
 });
 
-pristine.addValidator(hashtagInputElement, hashtagValidator, error);
+pristine.addValidator(hashtagInputElement, hashtagValidator, error, 2, false);
 
 const onHashtagInput = () => {
   if (pristine.validate()) {
@@ -115,9 +115,9 @@ hashtagInputElement.addEventListener('input', onHashtagInput);
 //в комментариях вывожу в консоль данные отправляемые на сервер для контроля ожидаемого поведения
 const onFormSubmit = (evt) => {
   evt.preventDefault();
-  //  const formData = new FormData(evt.target);
+  const formData = new FormData(evt.target);
   closeUploadPopup();
-  // console.log(Object.fromEntries(formData));
+  console.log(Object.fromEntries(formData));
 
 };
 

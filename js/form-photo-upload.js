@@ -1,5 +1,6 @@
 import { isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody } from './utils.js';
 import { onFormSubmit } from './form-validate.js';
+import { disableSlider } from './slider-effects.js';
 
 const formElement = document.querySelector('.img-upload__form');
 const uploadInputElement = formElement.querySelector('.img-upload__input');
@@ -21,6 +22,7 @@ function closeUploadPopup () {
   document.removeEventListener('keydown', onUploadPopupEscKeydown);
   resetUploadForm();
   formElement.removeEventListener('submit', onFormSubmit);
+  disableSlider();
 }
 
 const openUploadPopup = () => {
