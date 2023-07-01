@@ -11,7 +11,7 @@ const SliderOptions = {
     step: 1,
     range: {
       'min': 0,
-      'max': 100,
+      'max': 0,
     }
   },
   chrome : {
@@ -57,7 +57,7 @@ const SliderOptions = {
 };
 
 const Effects = {
-  none: ['', ''],
+  none: ['none', ''],
   chrome: ['grayscale', ''],
   sepia: ['sepia', ''],
   marvin: ['invert', '%'],
@@ -67,9 +67,9 @@ const Effects = {
 
 const updateNoUiSlider = (effect) => effectLevelSlider.noUiSlider.updateOptions(SliderOptions[effect]);
 
-const createNoUiSlider = () => {
+const initNoUiSlider = () => {
   noUiSlider.create(effectLevelSlider, {
-    start: 0,
+    start: 100,
     connect: 'lower',
     step: 1,
     range: {
@@ -78,23 +78,25 @@ const createNoUiSlider = () => {
     }
   });
 };
-createNoUiSlider();
+
 
 console.dir(effectLevelSlider.noUiSlider);
 
-const getSliderValue = () => {
-  console.log(effectLevelSlider.noUiSlider.get());
-  effectLevelElement.value = effectLevelSlider.noUiSlider.get();
-  console.log(effectLevelElement.value);
-  return effectLevelElement.value;
+const setDefaultConfigs = () => {
+  sliderContainer.style.display = 'none';
+  picturePreviewElement.style.transform = 'scale(1)';
 };
-
 
 const disableSlider = () => {
   effectLevelSlider.setAttribute('disabled', true);
-  effectLevelSlider.noUiSlider.reset();
   sliderContainer.style.display = 'none';
-  picturePreviewElement.style.filter = '';
+  picturePreviewElement.removeAttribute('style');
+};
+
+const destroySlider = () => {
+  effectLevelSlider.noUiSlider.destroy();
+  sliderContainer.style.display = 'none';
+  picturePreviewElement.removeAttribute('style');
 };
 
 const enableSlider = () => {
@@ -104,26 +106,32 @@ const enableSlider = () => {
 };
 
 const addEffect = (effect, effectLevel, measure) => {
+  if (effect === 'none') {
+    picturePreviewElement.removeAttribute('style');
+    return;
+  }
   picturePreviewElement.style.filter = `${effect}(${effectLevel}${measure})`;
-  console.log(`${effect}(${effectLevel}${measure})`);
 };
 
-//disableSlider();
 const onEffectListChange = (evt) => {
   const currentEffectItem = evt.target.closest('.effects__item');
+
   if (! currentEffectItem) {
     return;
-  } const currentEffectValue = currentEffectItem.querySelector('.effects__radio').value;
-  console.log(currentEffectValue);
+  }
+  const currentEffectValue = currentEffectItem.querySelector('.effects__radio').value;
   updateNoUiSlider(currentEffectValue);
-  enableSlider();
-  currentEffectValue === 'none' ? disableSlider() : enableSlider();
-  effectLevelSlider.noUiSlider.on('update', getSliderValue);
-  //picturePreviewElement.style.filter = `${currentEffectValue}(100%)`;
-  console.log(picturePreviewElement, Effects[currentEffectValue][0], getSliderValue(), Effects[currentEffectValue][1]);
-  addEffect(Effects[currentEffectValue][0], getSliderValue(), Effects[currentEffectValue][1]);
+  if (currentEffectValue === 'none') {
+    disableSlider();
+  } else {
+    enableSlider();
+  }
+  effectLevelSlider.noUiSlider.on('update', () => {
+    effectLevelElement.value = effectLevelSlider.noUiSlider.get();
+    addEffect(Effects[currentEffectValue][0], effectLevelElement.value, Effects[currentEffectValue][1]);
+  });
 };
 
 effectListElement.addEventListener('change', onEffectListChange);
 
-export { disableSlider };
+export { destroySlider, initNoUiSlider, setDefaultConfigs };
