@@ -80,8 +80,6 @@ const initNoUiSlider = () => {
 };
 
 
-console.dir(effectLevelSlider.noUiSlider);
-
 const setDefaultConfigs = () => {
   sliderContainer.style.display = 'none';
   picturePreviewElement.style.transform = 'scale(1)';
@@ -100,12 +98,12 @@ const destroySlider = () => {
 };
 
 const enableSlider = () => {
- //effectLevelSlider.noUiSlider.reset();
   effectLevelSlider.removeAttribute('disabled');
   sliderContainer.style.display = '';
 };
 
 const addEffect = (effect, effectLevel, measure) => {
+
   if (effect === 'none') {
     picturePreviewElement.removeAttribute('style');
     return;
@@ -120,12 +118,15 @@ const onEffectListChange = (evt) => {
     return;
   }
   const currentEffectValue = currentEffectItem.querySelector('.effects__radio').value;
+
   updateNoUiSlider(currentEffectValue);
+
   if (currentEffectValue === 'none') {
     disableSlider();
   } else {
     enableSlider();
   }
+
   effectLevelSlider.noUiSlider.on('update', () => {
     effectLevelElement.value = effectLevelSlider.noUiSlider.get();
     addEffect(Effects[currentEffectValue][0], effectLevelElement.value, Effects[currentEffectValue][1]);
