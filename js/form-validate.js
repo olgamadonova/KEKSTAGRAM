@@ -112,13 +112,9 @@ const onHashtagInput = () => {
 descriptionInputElement.addEventListener('input', showLengthWarning);
 hashtagInputElement.addEventListener('input', onHashtagInput);
 
-//в комментариях вывожу в консоль данные отправляемые на сервер для контроля ожидаемого поведения
 const onFormSubmit = (evt) => {
   evt.preventDefault();
-  //  const formData = new FormData(evt.target);
   closeUploadPopup();
-  //  console.log(Object.fromEntries(formData));
-
 };
 
 export { onFormSubmit };

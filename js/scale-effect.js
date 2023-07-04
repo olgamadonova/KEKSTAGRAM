@@ -34,43 +34,31 @@ const checkScaleBtn = (currentValue) => {
   }
 };
 
-const onBiggerBtnClick = (evt) => {
-  const targetBtn = evt.target.closest('.scale__control--bigger');
-  let currentScaleValue = parseInt(scaleValueElement.value, 10);
-
+const onScaleBtnClick = (evt, className, value, operand) => {
+  const targetBtn = evt.target.closest(`.scale__control--${className}`);
   if (!targetBtn) {
     return;
-  } if (currentScaleValue === ScaleControl.maxValue) {
+  }
+  let currentScaleValue = parseInt(scaleValueElement.value, 10);
+
+  if (currentScaleValue === value) {
     return;
   }
-  currentScaleValue += ScaleControl.step;
+  currentScaleValue += ScaleControl.step * operand;
 
   scaleValueElement.value = `${currentScaleValue}%`;
   picturePreviewElement.style.transform = `scale(${currentScaleValue / 100})`;
   checkScaleBtn(currentScaleValue);
 };
 
-const onSmallerBtnClick = (evt) => {
-  const targetBtn = evt.target.closest('.scale__control--smaller');
-  let currentScaleValue = parseInt(scaleValueElement.value, 10);
+const onBiggerBtnClick = (evt) => onScaleBtnClick(evt, 'bigger', ScaleControl.maxValue, 1);
+const onSmallerBtnClick = (evt) => onScaleBtnClick(evt, 'smaller', ScaleControl.minValue, -1);
 
-  if (!targetBtn) {
-    return;
-  } if (currentScaleValue === ScaleControl.minValue) {
-    return;
-  }
-
-  currentScaleValue -= ScaleControl.step;
-
-  scaleValueElement.value = `${currentScaleValue}%`;
-  picturePreviewElement.style.transform = `scale(${currentScaleValue / 100})`;
-  checkScaleBtn(currentScaleValue);
-};
 
 const initScaleBtnEvents = () => {
   checkScaleBtn(ScaleControl.defaultValue);
-  smallerBtnElement.addEventListener('click', onSmallerBtnClick);
   biggerBtnElement.addEventListener('click', onBiggerBtnClick);
+  smallerBtnElement.addEventListener('click', onSmallerBtnClick);
 };
 
 const removeScaleBtnEvents = () => {
