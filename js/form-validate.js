@@ -99,26 +99,22 @@ const pristine = new Pristine (formElement, {
   errorTextClass: 'form__error',
 });
 
-pristine.addValidator(hashtagInputElement, hashtagValidator, error);
+pristine.addValidator(hashtagInputElement, hashtagValidator, error, 2, false);
 
 const onHashtagInput = () => {
   if (pristine.validate()) {
-    submitBtnElement.removeAttribute('disabled');
+    submitBtnElement.disabled = false;
   } else {
-    submitBtnElement.setAttribute('disabled', 'true');
+    submitBtnElement.disabled = true;
   }
 };
 
 descriptionInputElement.addEventListener('input', showLengthWarning);
 hashtagInputElement.addEventListener('input', onHashtagInput);
 
-//в комментариях вывожу в консоль данные отправляемые на сервер для контроля ожидаемого поведения
 const onFormSubmit = (evt) => {
   evt.preventDefault();
-  //  const formData = new FormData(evt.target);
   closeUploadPopup();
-  // console.log(Object.fromEntries(formData));
-
 };
 
 export { onFormSubmit };

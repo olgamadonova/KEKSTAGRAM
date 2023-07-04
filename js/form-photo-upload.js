@@ -1,5 +1,7 @@
 import { isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody } from './utils.js';
 import { onFormSubmit } from './form-validate.js';
+import { destroySlider, initNoUiSlider, setDefaultConfigs } from './slider-effects.js';
+import { initScaleBtnEvents, removeScaleBtnEvents } from './scale-effect.js';
 
 const formElement = document.querySelector('.img-upload__form');
 const uploadInputElement = formElement.querySelector('.img-upload__input');
@@ -21,6 +23,8 @@ function closeUploadPopup () {
   document.removeEventListener('keydown', onUploadPopupEscKeydown);
   resetUploadForm();
   formElement.removeEventListener('submit', onFormSubmit);
+  destroySlider();
+  removeScaleBtnEvents();
 }
 
 const openUploadPopup = () => {
@@ -28,6 +32,9 @@ const openUploadPopup = () => {
   openPopup(uploadPopupElement);
   document.addEventListener('keydown', onUploadPopupEscKeydown);
   closePopupBtnElement.addEventListener('click', closeUploadPopup);
+  setDefaultConfigs();
+  initNoUiSlider();
+  initScaleBtnEvents();
 };
 
 
