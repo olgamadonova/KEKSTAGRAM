@@ -103,9 +103,9 @@ pristine.addValidator(hashtagInputElement, hashtagValidator, error, 2, false);
 
 const onHashtagInput = () => {
   if (pristine.validate()) {
-    submitBtnElement.removeAttribute('disabled');
+    submitBtnElement.disabled = false;
   } else {
-    submitBtnElement.setAttribute('disabled', 'true');
+    submitBtnElement.disabled = true;
   }
 };
 

@@ -8,8 +8,6 @@ const uploadInputElement = formElement.querySelector('.img-upload__input');
 const uploadPopupElement = formElement.querySelector('.img-upload__overlay');
 const closePopupBtnElement = formElement.querySelector('.img-upload__cancel');
 
-//const DEFAULT_SCALE_VAUE = 100;
-
 const onUploadPopupEscKeydown = (evt) => isEscPressed(evt)
 && !evt.target.classList.contains('text__hashtags')
 && !evt.target.classList.contains('text__description')
