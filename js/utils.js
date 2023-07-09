@@ -1,7 +1,8 @@
-const bodyElement = document.querySelector('body');
+import { createDomElement } from './create-dom-elements.js';
 
-/*const getNumbers = (string) => parseInt(string.replace(/\D+/g, ''), 10);
-getNumbers('1 кефир, 0.5 батона');*/
+const ALERT_TIME = 3500;
+
+const bodyElement = document.querySelector('body');
 
 const getRandomArrayElement = (elements) => elements[Math.floor(Math.random() * elements.length)];
 
@@ -12,6 +13,26 @@ const getRandomPositiveInteger = (min, max) => {
   const result = Math.random() * (upper - lower + 1) + lower;
 
   return Math.floor(result);
+};
+
+const showAlert = (message) => {
+  const alertContainer = createDomElement('div', 'alert-message', message);
+  alertContainer.style.zIndex = 100;
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = 0;
+  alertContainer.style.right = 0;
+  alertContainer.style.top = 0;
+  alertContainer.style.padding = '10px 3px';
+  alertContainer.style.fontSize = '30px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'tomato';
+  alertContainer.style.transform = 'scale(1)';
+
+  bodyElement.appendChild(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.style.transform = 'scale(0)';
+  }, ALERT_TIME);
 };
 
 const isEscPressed = (evt) => evt.key === 'Escape';
@@ -26,4 +47,6 @@ const setScrollBody = () => bodyElement.classList.remove('modal-open');
 
 const normalizeString = (str) => str.toLowerCase().trim();
 
-export { getRandomArrayElement, getRandomPositiveInteger, isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody, normalizeString };
+const renderNotification = (element) => bodyElement.appendChild(element);
+
+export { getRandomArrayElement, getRandomPositiveInteger, isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody, normalizeString, showAlert, renderNotification };

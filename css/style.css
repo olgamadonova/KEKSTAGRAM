@@ -1408,3 +1408,7 @@ main {
 .hidden {
   display: none;
 }
+
+.alert-message {
+  transition: transform 0.3s ease-in;
+};

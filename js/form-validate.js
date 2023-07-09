@@ -1,6 +1,8 @@
-import { normalizeString } from './utils.js';
+import { normalizeString, showAlert } from './utils.js';
 import { createDomElement } from './create-dom-elements.js';
 import { closeUploadPopup } from './form-photo-upload.js';
+import { sendData } from './fetch.js';
+import { showSuccessPopup, showErrorPopup } from './render-notifications.js';
 
 const MAX_DESCRIPTION_LENGTH = 140;
 const MAX_HASHTAG_QTY = 5;
@@ -101,11 +103,20 @@ const pristine = new Pristine (formElement, {
 
 pristine.addValidator(hashtagInputElement, hashtagValidator, error, 2, false);
 
+const blockSubmitBtn = () => {
+  submitBtnElement.disabled = true;
+};
+
+const unblockSubmitBtn = () => {
+  submitBtnElement.disabled = false;
+};
+
+
 const onHashtagInput = () => {
   if (pristine.validate()) {
-    submitBtnElement.disabled = false;
+    unblockSubmitBtn();
   } else {
-    submitBtnElement.disabled = true;
+    blockSubmitBtn();
   }
 };
 
@@ -114,7 +125,16 @@ hashtagInputElement.addEventListener('input', onHashtagInput);
 
 const onFormSubmit = (evt) => {
   evt.preventDefault();
-  closeUploadPopup();
+
+  blockSubmitBtn();
+
+  sendData(new FormData(evt.target))
+    .then(() => {
+      closeUploadPopup();
+      showSuccessPopup();
+    })
+    .catch(showErrorPopup)
+    .finally(unblockSubmitBtn);
 };
 
 export { onFormSubmit };
