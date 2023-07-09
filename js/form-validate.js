@@ -1,4 +1,4 @@
-import { normalizeString, showAlert } from './utils.js';
+import { normalizeString } from './utils.js';
 import { createDomElement } from './create-dom-elements.js';
 import { closeUploadPopup } from './form-photo-upload.js';
 import { sendData } from './fetch.js';

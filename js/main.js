@@ -1,7 +1,5 @@
-import './render-notifications.js';
 import './form-photo-upload.js';
-import './slider-effects.js';
-import './scale-effect.js';
+import './show-photo-preview.js';
 
 import { showAlert } from './utils.js';
 import { getData } from './fetch.js';
