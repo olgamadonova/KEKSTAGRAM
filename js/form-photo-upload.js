@@ -2,6 +2,7 @@ import { isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody } f
 import { onFormSubmit } from './form-validate.js';
 import { destroySlider, initNoUiSlider, setDefaultConfigs } from './slider-effects.js';
 import { initScaleBtnEvents, removeScaleBtnEvents } from './scale-effect.js';
+import { showPhotoPreview } from './show-photo-preview.js';
 
 const formElement = document.querySelector('.img-upload__form');
 const uploadInputElement = formElement.querySelector('.img-upload__input');
@@ -40,6 +41,7 @@ const openUploadPopup = () => {
 
 const onUploadInputChange = () => {
   openUploadPopup();
+  showPhotoPreview();
   formElement.addEventListener('submit', onFormSubmit);
 };
 

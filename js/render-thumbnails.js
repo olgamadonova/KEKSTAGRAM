@@ -1,10 +1,8 @@
-import { getPhotoList } from './mock.js';
 import { showBigPicture } from './render-picture-popup.js';
 
 const picturesContainerElement = document.querySelector('.pictures');
 const picturesListFragment = document.createDocumentFragment();
 const pictureTemplate = document.querySelector('#picture')?.content;
-const picturesList = getPhotoList();
 
 const renderPicture = (picture) => {
   const { url, id, comments, likes, description } = picture;
@@ -32,6 +30,4 @@ const renderPicturesList = (pictures) => {
   picturesContainerElement.appendChild(picturesListFragment);
 };
 
-renderPicturesList(picturesList);
-
-export { picturesList };
+export { renderPicturesList };

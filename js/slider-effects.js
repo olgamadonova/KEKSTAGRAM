@@ -88,13 +88,13 @@ const setDefaultConfigs = () => {
 const disableSlider = () => {
   effectLevelSlider.setAttribute('disabled', true);
   sliderContainer.style.display = 'none';
-  picturePreviewElement.removeAttribute('style');
+  picturePreviewElement.style.removeProperty('filter');
 };
 
 const destroySlider = () => {
   effectLevelSlider.noUiSlider.destroy();
   sliderContainer.style.display = 'none';
-  picturePreviewElement.removeAttribute('style');
+  picturePreviewElement.style.removeProperty('filter');
 };
 
 const enableSlider = () => {
@@ -105,7 +105,7 @@ const enableSlider = () => {
 const addEffect = (effect, effectLevel, measure) => {
 
   if (effect === 'none') {
-    picturePreviewElement.removeAttribute('style');
+    picturePreviewElement.style.removeProperty('filter');
     return;
   }
   picturePreviewElement.style.filter = `${effect}(${effectLevel}${measure})`;
@@ -119,13 +119,13 @@ const onEffectListChange = (evt) => {
   }
   const currentEffectValue = currentEffectItem.querySelector('.effects__radio').value;
 
-  updateNoUiSlider(currentEffectValue);
-
   if (currentEffectValue === 'none') {
     disableSlider();
   } else {
     enableSlider();
   }
+
+  updateNoUiSlider(currentEffectValue);
 
   effectLevelSlider.noUiSlider.on('update', () => {
     effectLevelElement.value = effectLevelSlider.noUiSlider.get();
