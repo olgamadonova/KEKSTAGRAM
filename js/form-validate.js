@@ -1,7 +1,7 @@
 import { normalizeString } from './utils.js';
 import { createDomElement } from './create-dom-elements.js';
 import { closeUploadPopup } from './form-photo-upload.js';
-import { sendData } from './fetch.js';
+import { makeRequest } from './fetch.js';
 import { showSuccessPopup, showErrorPopup } from './render-notifications.js';
 
 const MAX_DESCRIPTION_LENGTH = 140;
@@ -128,12 +128,11 @@ const onFormSubmit = (evt) => {
 
   blockSubmitBtn();
 
-  sendData(new FormData(evt.target))
-    .then(() => {
+  makeRequest(
+    () => {
       closeUploadPopup();
       showSuccessPopup();
-    })
-    .catch(showErrorPopup)
+    }, showErrorPopup, 'POST', new FormData(evt.target))
     .finally(unblockSubmitBtn);
 };
 
