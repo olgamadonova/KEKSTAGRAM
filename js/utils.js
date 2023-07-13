@@ -1,10 +1,15 @@
 import { createDomElement } from './create-dom-elements.js';
 
 const ALERT_TIME = 3500;
+const PICTURES_AMOUNT = 10;
 
 const bodyElement = document.querySelector('body');
 
 const getRandomArrayElement = (elements) => elements[Math.floor(Math.random() * elements.length)];
+
+const getRandomPictures = (pictures) => [...pictures].sort(() => 0.5 - Math.random()).slice(0, PICTURES_AMOUNT);
+
+const getDiscussedPictures = (pictures) => [...pictures].sort((a, b) => b.comments.length - a.comments.length);
 
 const getRandomPositiveInteger = (min, max) => {
 
@@ -35,6 +40,15 @@ const showAlert = (message) => {
   }, ALERT_TIME);
 };
 
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
 const isEscPressed = (evt) => evt.key === 'Escape';
 
 const openPopup = (popup) => popup.classList.remove('hidden');
@@ -49,4 +63,4 @@ const normalizeString = (str) => str.toLowerCase().trim();
 
 const renderNotification = (element) => bodyElement.appendChild(element);
 
-export { getRandomArrayElement, getRandomPositiveInteger, isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody, normalizeString, showAlert, renderNotification };
+export { getRandomArrayElement, getRandomPositiveInteger, isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody, normalizeString, showAlert, renderNotification, getRandomPictures, getDiscussedPictures, debounce };

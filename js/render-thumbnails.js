@@ -27,6 +27,7 @@ const renderPicturesList = (pictures) => {
       picturesListFragment.appendChild(renderPicture(picture));
     }
   });
+  document.querySelectorAll('.pictures .picture').forEach((picture) => picture.remove());
   picturesContainerElement.appendChild(picturesListFragment);
 };
 
