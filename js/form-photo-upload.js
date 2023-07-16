@@ -1,5 +1,5 @@
 import { isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody } from './utils.js';
-import { onFormSubmit } from './form-validate.js';
+import { onFormSubmit, pristine } from './form-validate.js';
 import { destroySlider, initNoUiSlider, setDefaultConfigs } from './slider-effects.js';
 import { initScaleBtnEvents, removeScaleBtnEvents } from './scale-effect.js';
 import { showPhotoPreview } from './show-photo-preview.js';
@@ -26,6 +26,7 @@ function closeUploadPopup () {
   formElement.removeEventListener('submit', onFormSubmit);
   destroySlider();
   removeScaleBtnEvents();
+  pristine.reset();
 }
 
 const openUploadPopup = () => {

@@ -111,7 +111,6 @@ const unblockSubmitBtn = () => {
   submitBtnElement.disabled = false;
 };
 
-
 const onHashtagInput = () => {
   if (pristine.validate()) {
     unblockSubmitBtn();
@@ -136,6 +135,6 @@ const onFormSubmit = (evt) => {
     .finally(unblockSubmitBtn);
 };
 
-export { onFormSubmit };
+export { onFormSubmit, pristine };
 
 

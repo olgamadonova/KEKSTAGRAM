@@ -3,9 +3,7 @@ import { renderPicturesList } from './render-thumbnails.js';
 
 const RERENDER_DELAY = 500;
 
-const filterListElement = document.querySelector('.img-filters');
 const filterBtnElements = document.querySelectorAll('.img-filters__button ');
-filterListElement.classList.remove('img-filters--inactive');
 
 const filterChanger = (filterValue, pictures) => {
   switch(filterValue) {

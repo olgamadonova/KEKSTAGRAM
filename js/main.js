@@ -9,6 +9,7 @@ import { onFilterListClick } from './filter-pictures.js';
 
 makeRequest((photos) => {
   renderPicturesList(photos);
+  filterListElement.classList.remove('img-filters--inactive');
   filterListElement.addEventListener('click', onFilterListClick(photos));
 }, () => {
   showAlert('Не удалось загрузить данные, попробуйте обновить страницу');
