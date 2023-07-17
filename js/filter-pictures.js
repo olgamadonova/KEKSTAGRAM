@@ -3,8 +3,6 @@ import { renderPicturesList } from './render-thumbnails.js';
 
 const RERENDER_DELAY = 500;
 
-const filterBtnElements = document.querySelectorAll('.img-filters__button ');
-
 const filterChanger = (filterValue, pictures) => {
   switch(filterValue) {
     case 'filter-random':
@@ -17,15 +15,24 @@ const filterChanger = (filterValue, pictures) => {
 };
 
 const onFilterListClick = (pictures) => function (evt) {
-  const currentFilterBtn = evt.target.closest('.img-filters__button');
+  const triggerFilterBtn = evt.target.closest('.img-filters__button');
 
-  if (!currentFilterBtn) {
+  if (!triggerFilterBtn) {
     return;
   }
-  filterBtnElements.forEach((btn) => btn.classList.remove('img-filters__button--active'));
 
-  currentFilterBtn.classList.add('img-filters__button--active');
-  const currentFilterValue = currentFilterBtn.getAttribute('id');
+  const currentFilterContainer = triggerFilterBtn.closest('.img-filters__form');
+
+  const activeBtn = currentFilterContainer.querySelector('.img-filters__button--active');
+
+  activeBtn.classList.remove('img-filters__button--active');
+  triggerFilterBtn.classList.add('img-filters__button--active');
+
+  if (activeBtn === triggerFilterBtn) {
+    return;
+  }
+
+  const currentFilterValue = triggerFilterBtn.getAttribute('id');
 
   const filteredArray = filterChanger(currentFilterValue, pictures);
 
@@ -35,7 +42,6 @@ const onFilterListClick = (pictures) => function (evt) {
     },
     RERENDER_DELAY,
   )();
-
 };
 
 export { onFilterListClick };

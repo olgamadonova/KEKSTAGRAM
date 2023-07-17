@@ -22,12 +22,12 @@ const renderPicture = (picture) => {
 };
 
 const renderPicturesList = (pictures) => {
+  document.querySelectorAll('.pictures .picture').forEach((picture) => picture.remove());
   pictures.forEach((picture) => {
     if (pictureTemplate) {
       picturesListFragment.appendChild(renderPicture(picture));
     }
   });
-  document.querySelectorAll('.pictures .picture').forEach((picture) => picture.remove());
   picturesContainerElement.appendChild(picturesListFragment);
 };
 

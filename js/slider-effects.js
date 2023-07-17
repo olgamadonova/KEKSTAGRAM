@@ -79,7 +79,6 @@ const initNoUiSlider = () => {
   });
 };
 
-
 const setDefaultConfigs = () => {
   sliderContainer.style.display = 'none';
   picturePreviewElement.style.transform = 'scale(1)';
