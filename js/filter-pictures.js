@@ -1,20 +1,25 @@
 import { getRandomPictures, getDiscussedPictures, debounce } from './utils.js';
 import { renderPicturesList } from './render-thumbnails.js';
 
-const RERENDER_DELAY = 500;
-
-const filterChanger = (filterValue, pictures) => {
+function filterChanger (filterValue, pictures) {
   switch(filterValue) {
-    case 'filter-random':
-      return getRandomPictures(pictures);
-    case 'filter-discussed':
-      return getDiscussedPictures(pictures);
-    case 'filter-default':
-      return pictures;
+    case 'filter-random': {
+      const randomPictures = getRandomPictures(pictures);
+      return renderPicturesList(randomPictures);
+    }
+    case 'filter-discussed': {
+      const discussedPictures = getDiscussedPictures(pictures);
+      return renderPicturesList(discussedPictures);
+    }
+    case 'filter-default': {
+      return renderPicturesList(pictures);
+    }
   }
-};
+}
 
-const onFilterListClick = (pictures) => function (evt) {
+
+function onFilterListClick (pictures, evt) {
+
   const triggerFilterBtn = evt.target.closest('.img-filters__button');
 
   if (!triggerFilterBtn) {
@@ -34,15 +39,9 @@ const onFilterListClick = (pictures) => function (evt) {
 
   const currentFilterValue = triggerFilterBtn.getAttribute('id');
 
-  const filteredArray = filterChanger(currentFilterValue, pictures);
+  filterChanger(currentFilterValue, pictures);
 
-  debounce(
-    () => {
-      renderPicturesList(filteredArray);
-    },
-    RERENDER_DELAY,
-  )();
-};
+}
 
 export { onFilterListClick };
 

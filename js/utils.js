@@ -2,6 +2,7 @@ import { createDomElement } from './create-dom-elements.js';
 
 const ALERT_TIME = 3500;
 const PICTURES_AMOUNT = 10;
+const RERENDER_DELAY = 500;
 
 const bodyElement = document.querySelector('body');
 
@@ -40,9 +41,11 @@ const showAlert = (message) => {
   }, ALERT_TIME);
 };
 
-const debounce = (callback, timeoutDelay) => {
+const debounce = (callback, timeoutDelay = RERENDER_DELAY) => {
+ console.log(1);
   let timeoutId;
   return (...rest) => {
+  console.log(2);
 
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
