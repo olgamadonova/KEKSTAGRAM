@@ -1,5 +1,4 @@
 import { normalizeString } from './utils.js';
-import { createDomElement } from './create-dom-elements.js';
 import { closeUploadPopup } from './form-photo-upload.js';
 import { makeRequest } from './fetch.js';
 import { showSuccessPopup, showErrorPopup } from './render-notifications.js';
@@ -15,7 +14,7 @@ const ErrorMessage = {
   INVALID_HASHTAG_LENGTH: `максимальная длина одного хэш-тега ${MAX_HASHTAG_LENGTH} символов, включая решётку`,
   INVALID_SEPARATOR: 'хэш-теги разделяются пробелами',
   INVALID_FIRST_SYMBOL: 'хэш-тег начинается с символа #',
-  LIMIT_DESCRIPTION_LENGHT: `вы ввели максимально допустимое количество символов - ${MAX_DESCRIPTION_LENGTH}`,
+  LIMIT_DESCRIPTION_LENGTH: `вы ввели максимально допустимое количество символов - ${MAX_DESCRIPTION_LENGTH}`,
 };
 
 const formElement = document.querySelector('.img-upload__form');
@@ -27,13 +26,13 @@ let errorAlert = '';
 const error = () => errorAlert;
 
 
-const showLengthWarning = (evt) => {
-  const normalizedText = normalizeString(descriptionInputElement.value);
-  if (normalizedText.length === MAX_DESCRIPTION_LENGTH) {
-    const warningElement = createDomElement('p', 'warning__message', ErrorMessage.LIMIT_LENGHT);
-    const parent = evt.target.parentNode;
-    parent.appendChild(warningElement);
+const commentValidator = (inputValue) => {
+  const normalizedText = normalizeString(inputValue);
+
+  if (normalizedText.length <= MAX_DESCRIPTION_LENGTH) {
+    return true;
   }
+  return false;
 };
 
 const hashtagValidator = (inputValue) => {
@@ -101,7 +100,10 @@ const pristine = new Pristine (formElement, {
   errorTextClass: 'form__error',
 });
 
+const resetPristine = () => pristine.reset();
+
 pristine.addValidator(hashtagInputElement, hashtagValidator, error, 2, false);
+pristine.addValidator(descriptionInputElement, commentValidator, ErrorMessage.LIMIT_DESCRIPTION_LENGTH);
 
 const blockSubmitBtn = () => {
   submitBtnElement.disabled = true;
@@ -111,7 +113,7 @@ const unblockSubmitBtn = () => {
   submitBtnElement.disabled = false;
 };
 
-const onHashtagInput = () => {
+const onUserInput = () => {
   if (pristine.validate()) {
     unblockSubmitBtn();
   } else {
@@ -119,8 +121,8 @@ const onHashtagInput = () => {
   }
 };
 
-descriptionInputElement.addEventListener('input', showLengthWarning);
-hashtagInputElement.addEventListener('input', onHashtagInput);
+hashtagInputElement.addEventListener('input', onUserInput);
+descriptionInputElement.addEventListener('input', onUserInput);
 
 const onFormSubmit = (evt) => {
   evt.preventDefault();
@@ -135,6 +137,6 @@ const onFormSubmit = (evt) => {
     .finally(unblockSubmitBtn);
 };
 
-export { onFormSubmit, pristine };
+export { onFormSubmit, resetPristine };
 
 

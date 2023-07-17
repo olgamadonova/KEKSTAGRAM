@@ -31,8 +31,8 @@ const onErrorPopupEscKeydown = (evt) => isEscPressed(evt) && removeErrorNotifica
 function removeErrorNotification () {
   errorPopupElement.remove();
   document.removeEventListener('keydown', onErrorPopupEscKeydown);
-  successBtn.removeEventListener('click', onErrorBtnClick);
-  successPopupElement.removeEventListener('click', onErrorOverlayClick);
+  errorBtn.removeEventListener('click', onErrorBtnClick);
+  errorPopupElement.removeEventListener('click', onErrorOverlayClick);
 }
 
 const showErrorPopup = () => {
