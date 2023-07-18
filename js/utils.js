@@ -1,25 +1,9 @@
 import { createDomElement } from './create-dom-elements.js';
 
 const ALERT_TIME = 3500;
-const PICTURES_AMOUNT = 10;
 const RERENDER_DELAY = 500;
 
 const bodyElement = document.querySelector('body');
-
-const getRandomArrayElement = (elements) => elements[Math.floor(Math.random() * elements.length)];
-
-const getRandomPictures = (pictures) => [...pictures].sort(() => 0.5 - Math.random()).slice(0, PICTURES_AMOUNT);
-
-const getDiscussedPictures = (pictures) => [...pictures].sort((a, b) => b.comments.length - a.comments.length);
-
-const getRandomPositiveInteger = (min, max) => {
-
-  const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
-  const upper = Math.floor(Math.max(Math.abs(min), Math.abs(max)));
-  const result = Math.random() * (upper - lower + 1) + lower;
-
-  return Math.floor(result);
-};
 
 const showAlert = (message) => {
   const alertContainer = createDomElement('div', 'alert-message', message);
@@ -42,11 +26,8 @@ const showAlert = (message) => {
 };
 
 const debounce = (callback, timeoutDelay = RERENDER_DELAY) => {
- console.log(1);
   let timeoutId;
   return (...rest) => {
-  console.log(2);
-
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
@@ -66,4 +47,4 @@ const normalizeString = (str) => str.toLowerCase().trim();
 
 const renderNotification = (element) => bodyElement.appendChild(element);
 
-export { getRandomArrayElement, getRandomPositiveInteger, isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody, normalizeString, showAlert, renderNotification, getRandomPictures, getDiscussedPictures, debounce };
+export { isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody, normalizeString, showAlert, renderNotification, debounce };

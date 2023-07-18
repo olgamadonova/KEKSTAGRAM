@@ -25,7 +25,6 @@ const submitBtnElement = formElement.querySelector('.img-upload__submit');
 let errorAlert = '';
 const error = () => errorAlert;
 
-
 const commentValidator = (inputValue) => {
   const normalizedText = normalizeString(inputValue);
 
@@ -105,19 +104,15 @@ const resetPristine = () => pristine.reset();
 pristine.addValidator(hashtagInputElement, hashtagValidator, error, 2, false);
 pristine.addValidator(descriptionInputElement, commentValidator, ErrorMessage.LIMIT_DESCRIPTION_LENGTH);
 
-const blockSubmitBtn = () => {
-  submitBtnElement.disabled = true;
-};
+const toggleButtonDisabledState = () => {
+  submitBtnElement.disabled = !submitBtnElement.disabled;
 
-const unblockSubmitBtn = () => {
-  submitBtnElement.disabled = false;
 };
-
 const onUserInput = () => {
-  if (pristine.validate()) {
-    unblockSubmitBtn();
+  if (!pristine.validate()) {
+    submitBtnElement.disabled = true;
   } else {
-    blockSubmitBtn();
+    submitBtnElement.disabled = false;
   }
 };
 
@@ -127,14 +122,14 @@ descriptionInputElement.addEventListener('input', onUserInput);
 const onFormSubmit = (evt) => {
   evt.preventDefault();
 
-  blockSubmitBtn();
+  toggleButtonDisabledState();
 
   makeRequest(
     () => {
       closeUploadPopup();
       showSuccessPopup();
     }, showErrorPopup, 'POST', new FormData(evt.target))
-    .finally(unblockSubmitBtn);
+    .finally(toggleButtonDisabledState);
 };
 
 export { onFormSubmit, resetPristine };

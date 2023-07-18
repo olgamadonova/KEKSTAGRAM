@@ -1,17 +1,30 @@
-const filterListElement = document.querySelector('.img-filters');
 import './form-photo-upload.js';
-import './filter-pictures.js';
 
 import { showAlert, debounce } from './utils.js';
 import { makeRequest } from './fetch.js';
 import { renderPicturesList } from './render-thumbnails.js';
-import { onFilterListClick } from './filter-pictures.js';
+import { onFilterListClick, toggleFilterButtonState } from './filter-pictures.js';
 
-makeRequest((photos) => {
-  renderPicturesList(photos);
+const filterListElement = document.querySelector('.img-filters');
+
+let pictures = [];
+const onFilterListElementClick = debounce((evt) => onFilterListClick(pictures, evt));
+
+const onSuccess = (photos) => {
+  pictures = photos.slice();
+
+  renderPicturesList(pictures);
+
   filterListElement.classList.remove('img-filters--inactive');
-  filterListElement.addEventListener('click',debounce((evt) => onFilterListClick(photos, evt)));
-}, () => {
+  filterListElement.addEventListener('click', toggleFilterButtonState);
+
+  filterListElement.addEventListener('click', onFilterListElementClick);
+
+};
+
+const onError = () => {
   showAlert('Не удалось загрузить данные, попробуйте обновить страницу');
-});
+};
+
+makeRequest(onSuccess, onError);
 

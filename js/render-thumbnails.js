@@ -22,7 +22,7 @@ const renderPicture = (picture) => {
 };
 
 const renderPicturesList = (pictures) => {
-  console.log('render');
+
   document.querySelectorAll('.pictures .picture').forEach((picture) => picture.remove());
   pictures.forEach((picture) => {
     if (pictureTemplate) {
