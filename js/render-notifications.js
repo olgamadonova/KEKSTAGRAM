@@ -25,14 +25,14 @@ const showSuccessPopup = () => {
 };
 
 const onErrorBtnClick = () => removeErrorNotification();
-const onErrorOverlayClick = (evt) => !evt.target.closest('error__inner') && removeErrorNotification();
+const onErrorOverlayClick = (evt) => !evt.target.closest('.error__inner') && removeErrorNotification();
 const onErrorPopupEscKeydown = (evt) => isEscPressed(evt) && removeErrorNotification();
 
 function removeErrorNotification () {
   errorPopupElement.remove();
   document.removeEventListener('keydown', onErrorPopupEscKeydown);
-  successBtn.removeEventListener('click', onErrorBtnClick);
-  successPopupElement.removeEventListener('click', onErrorOverlayClick);
+  errorBtn.removeEventListener('click', onErrorBtnClick);
+  errorPopupElement.removeEventListener('click', onErrorOverlayClick);
 }
 
 const showErrorPopup = () => {

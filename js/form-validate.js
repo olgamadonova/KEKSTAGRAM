@@ -1,5 +1,4 @@
 import { normalizeString } from './utils.js';
-import { createDomElement } from './create-dom-elements.js';
 import { closeUploadPopup } from './form-photo-upload.js';
 import { makeRequest } from './fetch.js';
 import { showSuccessPopup, showErrorPopup } from './render-notifications.js';
@@ -15,7 +14,7 @@ const ErrorMessage = {
   INVALID_HASHTAG_LENGTH: `максимальная длина одного хэш-тега ${MAX_HASHTAG_LENGTH} символов, включая решётку`,
   INVALID_SEPARATOR: 'хэш-теги разделяются пробелами',
   INVALID_FIRST_SYMBOL: 'хэш-тег начинается с символа #',
-  LIMIT_DESCRIPTION_LENGHT: `вы ввели максимально допустимое количество символов - ${MAX_DESCRIPTION_LENGTH}`,
+  LIMIT_DESCRIPTION_LENGTH: `вы ввели максимально допустимое количество символов - ${MAX_DESCRIPTION_LENGTH}`,
 };
 
 const formElement = document.querySelector('.img-upload__form');
@@ -26,14 +25,13 @@ const submitBtnElement = formElement.querySelector('.img-upload__submit');
 let errorAlert = '';
 const error = () => errorAlert;
 
+const commentValidator = (inputValue) => {
+  const normalizedText = normalizeString(inputValue);
 
-const showLengthWarning = (evt) => {
-  const normalizedText = normalizeString(descriptionInputElement.value);
-  if (normalizedText.length === MAX_DESCRIPTION_LENGTH) {
-    const warningElement = createDomElement('p', 'warning__message', ErrorMessage.LIMIT_LENGHT);
-    const parent = evt.target.parentNode;
-    parent.appendChild(warningElement);
+  if (normalizedText.length <= MAX_DESCRIPTION_LENGTH) {
+    return true;
   }
+  return false;
 };
 
 const hashtagValidator = (inputValue) => {
@@ -101,41 +99,39 @@ const pristine = new Pristine (formElement, {
   errorTextClass: 'form__error',
 });
 
+const resetPristine = () => pristine.reset();
+
 pristine.addValidator(hashtagInputElement, hashtagValidator, error, 2, false);
+pristine.addValidator(descriptionInputElement, commentValidator, ErrorMessage.LIMIT_DESCRIPTION_LENGTH);
 
-const blockSubmitBtn = () => {
-  submitBtnElement.disabled = true;
+const toggleButtonDisabledState = () => {
+  submitBtnElement.disabled = !submitBtnElement.disabled;
+
 };
-
-const unblockSubmitBtn = () => {
-  submitBtnElement.disabled = false;
-};
-
-
-const onHashtagInput = () => {
-  if (pristine.validate()) {
-    unblockSubmitBtn();
+const onUserInput = () => {
+  if (!pristine.validate()) {
+    submitBtnElement.disabled = true;
   } else {
-    blockSubmitBtn();
+    submitBtnElement.disabled = false;
   }
 };
 
-descriptionInputElement.addEventListener('input', showLengthWarning);
-hashtagInputElement.addEventListener('input', onHashtagInput);
+hashtagInputElement.addEventListener('input', onUserInput);
+descriptionInputElement.addEventListener('input', onUserInput);
 
 const onFormSubmit = (evt) => {
   evt.preventDefault();
 
-  blockSubmitBtn();
+  toggleButtonDisabledState();
 
   makeRequest(
     () => {
       closeUploadPopup();
       showSuccessPopup();
     }, showErrorPopup, 'POST', new FormData(evt.target))
-    .finally(unblockSubmitBtn);
+    .finally(toggleButtonDisabledState);
 };
 
-export { onFormSubmit };
+export { onFormSubmit, resetPristine };
 
 

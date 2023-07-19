@@ -1,19 +1,9 @@
 import { createDomElement } from './create-dom-elements.js';
 
 const ALERT_TIME = 3500;
+const RERENDER_DELAY = 500;
 
 const bodyElement = document.querySelector('body');
-
-const getRandomArrayElement = (elements) => elements[Math.floor(Math.random() * elements.length)];
-
-const getRandomPositiveInteger = (min, max) => {
-
-  const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
-  const upper = Math.floor(Math.max(Math.abs(min), Math.abs(max)));
-  const result = Math.random() * (upper - lower + 1) + lower;
-
-  return Math.floor(result);
-};
 
 const showAlert = (message) => {
   const alertContainer = createDomElement('div', 'alert-message', message);
@@ -35,6 +25,14 @@ const showAlert = (message) => {
   }, ALERT_TIME);
 };
 
+const debounce = (callback, timeoutDelay = RERENDER_DELAY) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
 const isEscPressed = (evt) => evt.key === 'Escape';
 
 const openPopup = (popup) => popup.classList.remove('hidden');
@@ -49,4 +47,4 @@ const normalizeString = (str) => str.toLowerCase().trim();
 
 const renderNotification = (element) => bodyElement.appendChild(element);
 
-export { getRandomArrayElement, getRandomPositiveInteger, isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody, normalizeString, showAlert, renderNotification };
+export { isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody, normalizeString, showAlert, renderNotification, debounce };

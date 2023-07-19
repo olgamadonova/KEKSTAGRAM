@@ -4,7 +4,8 @@ import { createComment } from './create-dom-elements.js';
 const picturePopupElement = document.querySelector('.big-picture');
 const picturePopupCommentsElement = picturePopupElement.querySelector('.social__comments');
 const picturePopupCloseBtnElement = picturePopupElement.querySelector('.big-picture__cancel');
-const commentsCountElement = picturePopupElement.querySelector('.social__comment-count');
+const commentsCountRenderElement = picturePopupElement.querySelector('.comments-count--render');
+const commentsCountTotalElement = picturePopupElement.querySelector('.comments-count');
 const commentsLoader = picturePopupElement.querySelector('.comments-loader');
 
 const COMMENT_STEP = 5;
@@ -36,8 +37,8 @@ const renderComments = (currentCommentsList, totalCommentsList) => {
   });
 
   totalCommentsList = totalCommentsList > currentCommentsList ? totalCommentsList : currentCommentsList;
-
-  commentsCountElement.textContent = `${commentsRendered} из ${totalCommentsList.length} комментариев`;
+  commentsCountRenderElement.textContent = commentsRendered;
+  commentsCountTotalElement.textContent = totalCommentsList.length;
 };
 
 const onPicturePopupEscKeydown = (evt) => isEscPressed(evt) && closeBigPicture();

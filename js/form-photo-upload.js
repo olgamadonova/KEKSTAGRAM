@@ -1,5 +1,5 @@
 import { isEscPressed, openPopup, closePopup, setNoScrollBody, setScrollBody } from './utils.js';
-import { onFormSubmit } from './form-validate.js';
+import { onFormSubmit, resetPristine } from './form-validate.js';
 import { destroySlider, initNoUiSlider, setDefaultConfigs } from './slider-effects.js';
 import { initScaleBtnEvents, removeScaleBtnEvents } from './scale-effect.js';
 import { showPhotoPreview } from './show-photo-preview.js';
@@ -12,6 +12,7 @@ const closePopupBtnElement = formElement.querySelector('.img-upload__cancel');
 const onUploadPopupEscKeydown = (evt) => isEscPressed(evt)
 && !evt.target.classList.contains('text__hashtags')
 && !evt.target.classList.contains('text__description')
+&& !evt.target.contains(document.querySelector('.error'))
 && closeUploadPopup();
 
 const resetUploadForm = () => {
@@ -26,6 +27,7 @@ function closeUploadPopup () {
   formElement.removeEventListener('submit', onFormSubmit);
   destroySlider();
   removeScaleBtnEvents();
+  resetPristine();
 }
 
 const openUploadPopup = () => {

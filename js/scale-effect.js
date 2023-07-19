@@ -15,21 +15,15 @@ const checkScaleBtn = (currentValue) => {
   switch(currentValue) {
     case ScaleControl.maxValue:
       biggerBtnElement.disabled = true;
-      biggerBtnElement.style.backgroundColor = 'red';
       smallerBtnElement.disabled = false;
-      smallerBtnElement.style.backgroundColor = 'green';
       break;
     case ScaleControl.minValue:
       smallerBtnElement.disabled = true;
-      smallerBtnElement.style.backgroundColor = 'red';
       smallerBtnElement.disabled = false;
-      biggerBtnElement.style.backgroundColor = 'green';
       break;
     default:
       biggerBtnElement.disabled = false;
-      biggerBtnElement.style.backgroundColor = 'green';
       smallerBtnElement.disabled = false;
-      smallerBtnElement.style.backgroundColor = 'green';
       break;
   }
 };
